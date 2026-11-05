@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
 function Admin({ 
+  isLoggedIn, 
+  setIsLoggedIn, 
   hotlines, 
   setHotlines, 
   evacuationList, 
@@ -8,11 +10,6 @@ function Admin({
   alerts, 
   setAlerts 
 }) {
-  // Initialize login state directly from localStorage
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('isAdminLoggedIn') === 'true';
-  });
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -26,8 +23,6 @@ function Admin({
   const handleLogin = (e) => {
     e.preventDefault();
     if (username === 'admin' && password === 'cdrrmo2026') {
-      // Directly write to localStorage on successful login
-      localStorage.setItem('isAdminLoggedIn', 'true');
       setIsLoggedIn(true);
       setError('');
     } else {
@@ -36,8 +31,6 @@ function Admin({
   };
 
   const handleLogout = () => {
-    // Clear from localStorage on logout
-    localStorage.removeItem('isAdminLoggedIn');
     setIsLoggedIn(false);
   };
 
@@ -127,7 +120,6 @@ function Admin({
       </div>
 
       <div className="row g-4">
-        {/* Broadcast Alert Section */}
         <div className="col-lg-6">
           <div className="card shadow-sm h-100 border-0">
             <div className="card-body">
@@ -173,7 +165,6 @@ function Admin({
           </div>
         </div>
 
-        {/* Add Emergency Hotline */}
         <div className="col-lg-6">
           <div className="card shadow-sm h-100 border-0">
             <div className="card-body">
@@ -207,7 +198,6 @@ function Admin({
           </div>
         </div>
 
-        {/* Manage Evacuation Centers */}
         <div className="col-12 mt-4">
           <div className="card shadow-sm border-0">
             <div className="card-body">

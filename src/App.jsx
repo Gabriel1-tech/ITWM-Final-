@@ -15,18 +15,8 @@ function App() {
   const [evacuationList, setEvacuationList] = useState(evacuationCenters);
   const [alerts, setAlerts] = useState(initialAlerts);
 
-  // Directly check localStorage on every render so it's 100% persistent
-  const isLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
-
-  const handleLoginStatus = (status) => {
-    if (status) {
-      localStorage.setItem('isAdminLoggedIn', 'true');
-    } else {
-      localStorage.removeItem('isAdminLoggedIn');
-    }
-    // Force a re-render so Navbar/Admin instantly reflect the change
-    setActivePage((prev) => prev); 
-  };
+  // Admin login state held permanently in App.jsx (survives tab switching)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -41,7 +31,7 @@ function App() {
         {activePage === 'admin' && (
           <Admin
             isLoggedIn={isLoggedIn}
-            setIsLoggedIn={handleLoginStatus}
+            setIsLoggedIn={setIsLoggedIn}
             hotlines={hotlines}
             setHotlines={setHotlines}
             evacuationList={evacuationList}

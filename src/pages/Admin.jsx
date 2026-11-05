@@ -8,9 +8,9 @@ function Admin({
   alerts, 
   setAlerts 
 }) {
-  // Read login state directly from localStorage so it never forgets on unmount
+  // Read persistent state directly from browser sessionStorage on load
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('isAdminLoggedIn') === 'true';
+    return sessionStorage.getItem('isAdminLoggedIn') === 'true';
   });
 
   const [username, setUsername] = useState('');
@@ -27,7 +27,7 @@ function Admin({
     e.preventDefault();
     if (username === 'admin' && password === 'cdrrmo2026') {
       setIsLoggedIn(true);
-      localStorage.setItem('isAdminLoggedIn', 'true'); // Save to browser storage
+      sessionStorage.setItem('isAdminLoggedIn', 'true');
       setError('');
     } else {
       setError('Invalid username or password');
@@ -36,7 +36,7 @@ function Admin({
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem('isAdminLoggedIn'); // Clear from storage
+    sessionStorage.removeItem('isAdminLoggedIn');
   };
 
   const handleAddHotline = (e) => {
@@ -72,7 +72,6 @@ function Admin({
     setAlertMessage('');
   };
 
-  // If not logged in, show login form
   if (!isLoggedIn) {
     return (
       <div className="container py-5">
@@ -118,7 +117,6 @@ function Admin({
     );
   }
 
-  // If logged in, render the dashboard
   return (
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -127,7 +125,6 @@ function Admin({
       </div>
 
       <div className="row g-4">
-        {/* Broadcast Alert Section */}
         <div className="col-lg-6">
           <div className="card shadow-sm h-100 border-0">
             <div className="card-body">
@@ -173,7 +170,6 @@ function Admin({
           </div>
         </div>
 
-        {/* Add Emergency Hotline */}
         <div className="col-lg-6">
           <div className="card shadow-sm h-100 border-0">
             <div className="card-body">
@@ -207,7 +203,6 @@ function Admin({
           </div>
         </div>
 
-        {/* Manage Evacuation Centers */}
         <div className="col-12 mt-4">
           <div className="card shadow-sm border-0">
             <div className="card-body">

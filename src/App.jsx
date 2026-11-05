@@ -4,6 +4,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Hotlines from './pages/Hotlines';
 import Evacuation from './pages/Evacuation';
+import Preparedness from './pages/Preparedness';
 import Volunteer from './pages/Volunteer';
 import Admin from './pages/Admin';
 import { hotlinesData, evacuationCenters, initialAlerts } from './data/disasterData';
@@ -14,14 +15,18 @@ function App() {
   const [evacuationList, setEvacuationList] = useState(evacuationCenters);
   const [alerts, setAlerts] = useState(initialAlerts);
 
-  // Read initial login state safely from localStorage
+  // Read login state from localStorage on load
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('isAdminLoggedIn') === 'true';
   });
 
-  // Sync state to localStorage whenever isLoggedIn changes
+  // Sync state changes with localStorage
   useEffect(() => {
-    localStorage.setItem('isAdminLoggedIn', isLoggedIn ? 'true' : 'false');
+    if (isLoggedIn) {
+      localStorage.setItem('isAdminLoggedIn', 'true');
+    } else {
+      localStorage.removeItem('isAdminLoggedIn');
+    }
   }, [isLoggedIn]);
 
   return (
@@ -30,20 +35,16 @@ function App() {
 
       <main className="flex-grow-1">
         {activePage === 'home' && (
-          <Home 
-            setActivePage={setActivePage} 
-            alerts={alerts} 
-          />
+          <Home setActivePage={setActivePage} alerts={alerts} />
         )}
         {activePage === 'hotlines' && (
-          <Hotlines 
-            hotlines={hotlines} 
-          />
+          <Hotlines hotlines={hotlines} />
         )}
         {activePage === 'evacuation' && (
-          <Evacuation 
-            evacuationList={evacuationList} 
-          />
+          <Evacuation evacuationList={evacuationList} />
+        )}
+        {activePage === 'preparedness' && (
+          <Preparedness />
         )}
         {activePage === 'volunteer' && (
           <Volunteer />

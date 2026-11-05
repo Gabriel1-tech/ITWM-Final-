@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -15,18 +15,18 @@ function App() {
   const [evacuationList, setEvacuationList] = useState(evacuationCenters);
   const [alerts, setAlerts] = useState(initialAlerts);
 
-  // Global state tied directly to localStorage
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('isAdminLoggedIn') === 'true';
-  });
+  // Directly check localStorage on every render so it's 100% persistent
+  const isLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
 
-  useEffect(() => {
-    if (isLoggedIn) {
+  const handleLoginStatus = (status) => {
+    if (status) {
       localStorage.setItem('isAdminLoggedIn', 'true');
     } else {
       localStorage.removeItem('isAdminLoggedIn');
     }
-  }, [isLoggedIn]);
+    // Force a re-render so Navbar/Admin instantly reflect the change
+    setActivePage((prev) => prev); 
+  };
 
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -41,7 +41,7 @@ function App() {
         {activePage === 'admin' && (
           <Admin
             isLoggedIn={isLoggedIn}
-            setIsLoggedIn={setIsLoggedIn}
+            setIsLoggedIn={handleLoginStatus}
             hotlines={hotlines}
             setHotlines={setHotlines}
             evacuationList={evacuationList}

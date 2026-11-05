@@ -4,7 +4,6 @@ const navItems = [
   { id: 'home', label: 'Home' },
   { id: 'hotlines', label: 'Hotlines' },
   { id: 'evacuation', label: 'Evacuation Centers' },
-  { id: 'preparedness', label: 'Preparedness Guide' },
   { id: 'volunteer', label: 'Volunteer / Donate' },
   { id: 'admin', label: 'Admin Portal' }
 ];

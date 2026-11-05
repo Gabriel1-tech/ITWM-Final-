@@ -1,37 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-
 import Home from './pages/Home';
 import Hotlines from './pages/Hotlines';
 import Evacuation from './pages/Evacuation';
-import Preparedness from './pages/Preparedness';
 import Volunteer from './pages/Volunteer';
 import Admin from './pages/Admin';
-
-import { emergencyHotlines as initialHotlines, evacuationCenters as initialCenters, initialAlerts } from './data/disasterData';
+import { hotlinesData, evacuationCenters, initialAlerts } from './data/disasterData';
 
 function App() {
   const [activePage, setActivePage] = useState('home');
-  const [hotlines, setHotlines] = useState(initialHotlines);
-  const [evacuationList, setEvacuationList] = useState(initialCenters);
+  const [hotlines, setHotlines] = useState(hotlinesData);
+  const [evacuationList, setEvacuationList] = useState(evacuationCenters);
   const [alerts, setAlerts] = useState(initialAlerts);
 
-  const renderPage = () => {
-    switch (activePage) {
-      case 'home':
-        return <Home setActivePage={setActivePage} alerts={alerts} />;
-      case 'hotlines':
-        return <Hotlines hotlines={hotlines} />;
-      case 'evacuation':
-        return <Evacuation evacuationList={evacuationList} />;
-      case 'preparedness':
-        return <Preparedness />;
-      case 'volunteer':
-        return <Volunteer />;
-      case 'admin':
-        return (
+  // Read initial login state safely from localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isAdminLoggedIn') === 'true';
+  });
+
+  // Sync state to localStorage whenever isLoggedIn changes
+  useEffect(() => {
+    localStorage.setItem('isAdminLoggedIn', isLoggedIn ? 'true' : 'false');
+  }, [isLoggedIn]);
+
+  return (
+    <div className="d-flex flex-column min-vh-100">
+      <Navbar activePage={activePage} setActivePage={setActivePage} />
+
+      <main className="flex-grow-1">
+        {activePage === 'home' && (
+          <Home 
+            setActivePage={setActivePage} 
+            alerts={alerts} 
+          />
+        )}
+        {activePage === 'hotlines' && (
+          <Hotlines 
+            hotlines={hotlines} 
+          />
+        )}
+        {activePage === 'evacuation' && (
+          <Evacuation 
+            evacuationList={evacuationList} 
+          />
+        )}
+        {activePage === 'volunteer' && (
+          <Volunteer />
+        )}
+        {activePage === 'admin' && (
           <Admin
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
             hotlines={hotlines}
             setHotlines={setHotlines}
             evacuationList={evacuationList}
@@ -39,18 +59,7 @@ function App() {
             alerts={alerts}
             setAlerts={setAlerts}
           />
-        );
-      default:
-        return <Home setActivePage={setActivePage} alerts={alerts} />;
-    }
-  };
-
-  return (
-    <div className="d-flex flex-column min-vh-100 bg-light">
-      <Navbar activePage={activePage} setActivePage={setActivePage} />
-      
-      <main className="flex-grow-1">
-        {renderPage()}
+        )}
       </main>
 
       <Footer setActivePage={setActivePage} />

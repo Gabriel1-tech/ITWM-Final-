@@ -15,16 +15,16 @@ function App() {
   const [evacuationList, setEvacuationList] = useState(evacuationCenters);
   const [alerts, setAlerts] = useState(initialAlerts);
 
-  // Global login state synced with sessionStorage
+  // Global state tied directly to localStorage
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return sessionStorage.getItem('isAdminLoggedIn') === 'true';
+    return localStorage.getItem('isAdminLoggedIn') === 'true';
   });
 
   useEffect(() => {
     if (isLoggedIn) {
-      sessionStorage.setItem('isAdminLoggedIn', 'true');
+      localStorage.setItem('isAdminLoggedIn', 'true');
     } else {
-      sessionStorage.removeItem('isAdminLoggedIn');
+      localStorage.removeItem('isAdminLoggedIn');
     }
   }, [isLoggedIn]);
 
@@ -33,22 +33,12 @@ function App() {
       <Navbar activePage={activePage} setActivePage={setActivePage} />
 
       <main className="flex-grow-1">
-        <div className={activePage === 'home' ? 'd-block' : 'd-none'}>
-          <Home setActivePage={setActivePage} alerts={alerts} />
-        </div>
-        <div className={activePage === 'hotlines' ? 'd-block' : 'd-none'}>
-          <Hotlines hotlines={hotlines} />
-        </div>
-        <div className={activePage === 'evacuation' ? 'd-block' : 'd-none'}>
-          <Evacuation evacuationList={evacuationList} />
-        </div>
-        <div className={activePage === 'preparedness' ? 'd-block' : 'd-none'}>
-          <Preparedness />
-        </div>
-        <div className={activePage === 'volunteer' ? 'd-block' : 'd-none'}>
-          <Volunteer />
-        </div>
-        <div className={activePage === 'admin' ? 'd-block' : 'd-none'}>
+        {activePage === 'home' && <Home setActivePage={setActivePage} alerts={alerts} />}
+        {activePage === 'hotlines' && <Hotlines hotlines={hotlines} />}
+        {activePage === 'evacuation' && <Evacuation evacuationList={evacuationList} />}
+        {activePage === 'preparedness' && <Preparedness />}
+        {activePage === 'volunteer' && <Volunteer />}
+        {activePage === 'admin' && (
           <Admin
             isLoggedIn={isLoggedIn}
             setIsLoggedIn={setIsLoggedIn}
@@ -59,7 +49,7 @@ function App() {
             alerts={alerts}
             setAlerts={setAlerts}
           />
-        </div>
+        )}
       </main>
 
       <Footer setActivePage={setActivePage} />

@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function Admin({ 
+  isLoggedIn, 
+  setIsLoggedIn, 
   hotlines, 
   setHotlines, 
   evacuationList, 
@@ -8,13 +10,6 @@ function Admin({
   alerts, 
   setAlerts 
 }) {
-  // Initialize state from localStorage
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const saved = localStorage.getItem('isAdminLoggedIn');
-    console.log("Initial load - localStorage isAdminLoggedIn:", saved);
-    return saved === 'true';
-  });
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -27,22 +22,18 @@ function Admin({
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log("Attempting login with:", username, password);
     if (username === 'admin' && password === 'cdrrmo2026') {
       setIsLoggedIn(true);
       localStorage.setItem('isAdminLoggedIn', 'true');
-      console.log("Login successful! Saved to localStorage.");
       setError('');
     } else {
       setError('Invalid username or password');
-      console.log("Login failed: invalid credentials.");
     }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem('isAdminLoggedIn');
-    console.log("Logged out. Cleared localStorage.");
   };
 
   const handleAddHotline = (e) => {

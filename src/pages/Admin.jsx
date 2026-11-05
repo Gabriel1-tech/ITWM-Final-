@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 function Admin({ 
-  isLoggedIn, 
-  setIsLoggedIn, 
   hotlines, 
   setHotlines, 
   evacuationList, 
@@ -10,6 +8,11 @@ function Admin({
   alerts, 
   setAlerts 
 }) {
+  // Read login state directly from localStorage so it never forgets on unmount
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isAdminLoggedIn') === 'true';
+  });
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -24,6 +27,7 @@ function Admin({
     e.preventDefault();
     if (username === 'admin' && password === 'cdrrmo2026') {
       setIsLoggedIn(true);
+      localStorage.setItem('isAdminLoggedIn', 'true'); // Save to browser storage
       setError('');
     } else {
       setError('Invalid username or password');
@@ -32,6 +36,7 @@ function Admin({
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    localStorage.removeItem('isAdminLoggedIn'); // Clear from storage
   };
 
   const handleAddHotline = (e) => {
@@ -67,6 +72,7 @@ function Admin({
     setAlertMessage('');
   };
 
+  // If not logged in, show login form
   if (!isLoggedIn) {
     return (
       <div className="container py-5">
@@ -112,6 +118,7 @@ function Admin({
     );
   }
 
+  // If logged in, render the dashboard
   return (
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -177,7 +184,7 @@ function Admin({
                   <input 
                     type="text" 
                     className="form-control" 
-                    placeholder="e.g. Brgy Red Croix Lucena"
+                    placeholder="e.g. Brgy Red Cross Lucena"
                     value={newHotlineName}
                     onChange={(e) => setNewHotlineName(e.target.value)}
                     required

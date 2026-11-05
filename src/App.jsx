@@ -15,7 +15,7 @@ function App() {
   const [evacuationList, setEvacuationList] = useState(evacuationCenters);
   const [alerts, setAlerts] = useState(initialAlerts);
 
-  // Lift isLoggedIn up to App.jsx and sync with sessionStorage
+  // Global login state synced with sessionStorage
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return sessionStorage.getItem('isAdminLoggedIn') === 'true';
   });
@@ -33,12 +33,22 @@ function App() {
       <Navbar activePage={activePage} setActivePage={setActivePage} />
 
       <main className="flex-grow-1">
-        {activePage === 'home' && <Home setActivePage={setActivePage} alerts={alerts} />}
-        {activePage === 'hotlines' && <Hotlines hotlines={hotlines} />}
-        {activePage === 'evacuation' && <Evacuation evacuationList={evacuationList} />}
-        {activePage === 'preparedness' && <Preparedness />}
-        {activePage === 'volunteer' && <Volunteer />}
-        {activePage === 'admin' && (
+        <div className={activePage === 'home' ? 'd-block' : 'd-none'}>
+          <Home setActivePage={setActivePage} alerts={alerts} />
+        </div>
+        <div className={activePage === 'hotlines' ? 'd-block' : 'd-none'}>
+          <Hotlines hotlines={hotlines} />
+        </div>
+        <div className={activePage === 'evacuation' ? 'd-block' : 'd-none'}>
+          <Evacuation evacuationList={evacuationList} />
+        </div>
+        <div className={activePage === 'preparedness' ? 'd-block' : 'd-none'}>
+          <Preparedness />
+        </div>
+        <div className={activePage === 'volunteer' ? 'd-block' : 'd-none'}>
+          <Volunteer />
+        </div>
+        <div className={activePage === 'admin' ? 'd-block' : 'd-none'}>
           <Admin
             isLoggedIn={isLoggedIn}
             setIsLoggedIn={setIsLoggedIn}
@@ -49,7 +59,7 @@ function App() {
             alerts={alerts}
             setAlerts={setAlerts}
           />
-        )}
+        </div>
       </main>
 
       <Footer setActivePage={setActivePage} />
